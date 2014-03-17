@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1= title 
+  p Please signup:
+  form(name="signup", action="/signup", method="post")
+    div= msg
+    div(class= uclass)
+      | Username:
+      input(type="text", name="username")
+
+    div(class= pclass)  
+      | Password:
+      input(type="password", name="password")
+
+      | Verify Password:
+      input(type="password", name="vpassword")
+
+    input(type="submit", value="Signup")
+
+

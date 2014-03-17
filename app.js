@@ -10,7 +10,6 @@ var routes = require('./routes/routes');
 var auth = require('./auth/auth');
 
 var app = express();
-var mongoose = require('mongoose');
 var passport = require('passport');
 
 // view engine setup
@@ -31,10 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
 //setup auth
-mongoose.connect("mongodb://localhost/whispertext");
-auth.init(passport, mongoose);
-
-routes.route(app, auth);
+auth.init(passport);
+routes.route(app, passport, auth);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

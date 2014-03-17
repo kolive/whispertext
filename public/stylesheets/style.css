@@ -5,3 +5,8 @@ body {
 a {
   color: #00b7ff;
 }
+.red-border {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #f00;
+}

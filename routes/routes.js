@@ -1,9 +1,48 @@
-/* GET home page. */
-exports.route = function(app, auth){
+var url = require('url');
+exports.route = function(app, passport, auth){
   
   app.get('/', function(req, res){
-    res.render('index', { title: 'Whispertext: Secrets, whispers, and numbers.' });
+    if(req.isAuthenticated()){
+      res.render('index', { title: 'Whispertext: Secrets, whispers, and numbers.', user: req.user.username });
+    }else{
+      res.render('index', { title: 'Whispertext: Secrets, whispers, and numbers.'});
+    }
   });
 
-  console.log("test");
+  app.get('/login', function(req,res){
+    var query = url.parse(req.url, true).query;
+    var msg = '';
+    if(query['status'] == 'failed'){
+      msg = "Username or password failed. Please try again.";
+    }
+    res.render('login', { title: 'Login!', msg: msg });
+  });
+
+  app.post('/login', auth.passport.authenticate('local', {
+        successRedirect:"/",
+        failureRedirect:"/login?status=failed" })
+  );
+
+  app.get('/signup', function(req, res){
+    var query = url.parse(req.url, true).query;
+    var msg = '';
+    var uclass = '';
+    var pclass = '';
+    if(query['status'] == 'ue'){
+      msg = 'Invalid or duplicate username, please use something else.';
+      uclass= 'red-border';
+    }else if(query['status'] == 'pe'){
+      msg = 'Nonmatching or invalid passwords, please try again.';
+      pclass = 'red-border';
+    }
+    res.render('signup', { title: 'Sign up for Whispertext', msg: msg, uclass: uclass, pclass: pclass });
+  });
+
+  app.post('/signup', auth.doesUserExist, function(req, res){
+      res.redirect('/login#please-login');
+    });
+ 
+
+
+  console.log('test');
 };
