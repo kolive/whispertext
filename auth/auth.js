@@ -1,18 +1,19 @@
 var localStrategy = require('passport-local').Strategy;
-var mongoose = require('mongoose');
 var crypto = require('crypto');
+var usermodel = require('../models/user').localUserSchema;
+var userprofile = require('../models/profile').userProfile;
+var mongoose = require('mongoose');
+var Users = mongoose.model('userauths', usermodel);
+var UserProfiles = mongoose.model('userprofile', userprofile);
 
 
-mongoose.connect('mongodb://localhost/whispertext');
-
-var localUserSchema = new mongoose.Schema({
-    username: String,
-    salt: String,
-    hash: String
-  });
-
-var Users = mongoose.model('userauths', localUserSchema);
-
+/***
+ *
+ * Registers a user in the database. Users have a username and password associated with them.
+ * The password is salted and stored as a hash. 
+ *
+ *
+ ***/
 exports.signup = function(username, password, done){
   
   //generate a salt of length 256
@@ -30,8 +31,17 @@ exports.signup = function(username, password, done){
         }, function(err, user){
           if(err){
             done(err);
-          
           }
+          UserProfiles.create({
+            username : username,
+            created: Date.now(),
+            points: 0,
+            achievement_ids: [],
+            }, function(err, profile){
+                if(err){
+                  done(err);
+                }
+              });
           done(null, user);
         });
   
@@ -41,12 +51,15 @@ exports.signup = function(username, password, done){
 }
 
 
+/***
+ *
+ * Inits the auth and defines strategies for authentication
+ *
+ ***/
 exports.init = function(passport){
   
   exports.passport = passport;
-
   passport.use(new localStrategy(function (username, password, done){
-    console.log("Trying to find user: " + username);
     Users.findOne({ username : username}, function(err, user){
       if(err) { return done(err); }
       if(!user){
@@ -86,10 +99,17 @@ exports.checkAuthenticated = function(req, res, next){
   if(req.isAuthenticated()){
     next();
   }else{
-    res.redirect("/login");
+    res.redirect("/login?status=failed");
   }
 };
 
+/***
+ *
+ *  Perhaps more aptly named "create user if none exists"
+ *
+ *  Handles verification of username and password and creates user
+ *
+ ***/
 exports.doesUserExist = function(req, res, next){
   Users.count({username: req.body.username
   }, function(err, count){

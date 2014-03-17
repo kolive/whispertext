@@ -11,6 +11,7 @@ var auth = require('./auth/auth');
 
 var app = express();
 var passport = require('passport');
+var mongoose = require('mongoose');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,8 +30,10 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
 
-//setup auth
+//setup auth and profiles
 auth.init(passport);
+mongoose.connect('mongodb://localhost/whispertext');
+
 routes.route(app, passport, auth);
 
 /// catch 404 and forwarding to error handler
@@ -65,5 +68,6 @@ app.use(function(err, req, res, next) {
 var server = app.listen(8888, function() {
   console.log('Listening on port %d', server.address().port);
 });
+
 
 module.exports = app;

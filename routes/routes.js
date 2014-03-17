@@ -1,4 +1,6 @@
 var url = require('url');
+var Users = require('../models/user');
+var Profiles = require('../models/profile');
 exports.route = function(app, passport, auth){
   
   app.get('/', function(req, res){
@@ -19,7 +21,7 @@ exports.route = function(app, passport, auth){
   });
 
   app.post('/login', auth.passport.authenticate('local', {
-        successRedirect:"/",
+        successRedirect:"/profile",
         failureRedirect:"/login?status=failed" })
   );
 
@@ -41,8 +43,28 @@ exports.route = function(app, passport, auth){
   app.post('/signup', auth.doesUserExist, function(req, res){
       res.redirect('/login#please-login');
     });
+
+  app.get('/profile', function(req, res){
+    var title = "User Profile Page";
+    var query = url.parse(req.url, true).query;
+    if(query['username'] !== undefined && query['username'].length > 0){
+      Users.getUser(query['username'], function(err, user){
+        if(err) res.render('profile', { title: "Missing Profile Page"});
+        else{ 
+          Profiles.getProfile(query['username'], function(err, profile){
+              if(err) res.render('profile', {title: "Missing Profile Page"});
+              else res.render('profile', { title: user.username + "'s Profile", user: user, profile: profile });
+            });
+         }
+        });
+    }else if(query['username'] === undefined && req.isAuthenticated()){
+      res.redirect('/profile?username='+req.user.username);
+    }else{
+      res.render('profile', {});
+    }
+
+  });
  
 
 
-  console.log('test');
 };

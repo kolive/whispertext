@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  if(typeof(user) !== 'undefined' && typeof(profile) !== 'undefined')
+    h1 #{user.username}'s Profile
+    p #{user.username} has been a member since #{profile.created.toDateString()}.
+    p #{user.username}'s score is: #{profile.points}.
+  else
+    h1 Something didn't happen.
+    p This user doesn't exist, or something broke. 
+  
