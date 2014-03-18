@@ -12,6 +12,9 @@ exports.route = function(app, passport, auth){
   });
 
   app.get('/login', function(req,res){
+    if(req.isAuthenticated()){
+      res.redirect('/profile'); 
+    }
     var query = url.parse(req.url, true).query;
     var msg = '';
     if(query['status'] == 'failed'){
@@ -49,10 +52,10 @@ exports.route = function(app, passport, auth){
     var query = url.parse(req.url, true).query;
     if(query['username'] !== undefined && query['username'].length > 0){
       Users.getUser(query['username'], function(err, user){
-        if(err) res.render('profile', { title: "Missing Profile Page"});
+        if(user === null || err) res.render('profile', { title: "Missing Profile Page"});
         else{ 
           Profiles.getProfile(query['username'], function(err, profile){
-              if(err) res.render('profile', {title: "Missing Profile Page"});
+              if(profile===null || err) res.render('profile', {title: "Missing Profile Page"});
               else res.render('profile', { title: user.username + "'s Profile", user: user, profile: profile });
             });
          }
@@ -60,7 +63,7 @@ exports.route = function(app, passport, auth){
     }else if(query['username'] === undefined && req.isAuthenticated()){
       res.redirect('/profile?username='+req.user.username);
     }else{
-      res.render('profile', {});
+      res.render('profile', { title: "Hey, you're not logged in." });
     }
 
   });

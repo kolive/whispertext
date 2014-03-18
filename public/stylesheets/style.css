@@ -1,9 +1,57 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
   color: #00b7ff;
+}
+#content {
+  margin-left: 175px;
+  padding: 50px;
+}
+#nav {
+  position: absolute;
+  padding-left: 8px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 200px;
+  border-right-style: solid;
+  border-right-width: 3px;
+  border-right-color: #000;
+}
+#nav-content {
+  padding-top: 75px;
+  padding-left: 10px;
+}
+ul.menu {
+  padding: 0px;
+  list-style: none;
+}
+ul.menu li {
+  padding: 2px;
+  background-image: url("/images/vg.png");
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #fff;
+  padding-left: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-size: 1.2em;
+  letter-spacing: 2px;
+  -o-transition: 0.5s;
+  -ms-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+ul.menu li:hover {
+  color: #000;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+ul.menu a {
+  text-decoration: none;
+  color: inherit;
 }
 .red-border {
   border-style: solid;
