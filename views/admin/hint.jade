@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+  h1= title 
+  p Admin page. New hint form:
+  h2 NEW HINT
+  form(name="nh", action="/admin/nh", method="post")
+    | cid:
+    input(type="text", name="cid")
+    </br>
+
+    | seqnum:
+    input(type="text", name="seq_num")
+    </br>
+
+    | delay:
+    input(type="text", name="delay")
+    </br>
+    
+    | ciphertext:
+    textarea(rows="20", cols="50",  name="content")
+    </br>
+    input(type="submit", value="Add Hint")
+
+
+

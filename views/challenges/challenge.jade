@@ -1,0 +1,12 @@
+extends base 
+
+block intro
+ h1=title 
+
+block ciphertext
+ pre=challenge.ciphertext
+
+block hints
+  for val in hints
+    div(id=val.seq_num class=hint)
+      p!=val.content

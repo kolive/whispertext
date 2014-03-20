@@ -1,6 +1,9 @@
 var url = require('url');
 var Users = require('../models/user');
 var Profiles = require('../models/profile');
+var Challenges = require('../models/challenge');
+var Hints = require('../models/hint');
+
 exports.route = function(app, passport, auth){
   
   app.get('/', function(req, res){
@@ -64,6 +67,61 @@ exports.route = function(app, passport, auth){
       res.redirect('/profile?username='+req.user.username);
     }else{
       res.render('profile', { title: "Hey, you're not logged in." });
+    }
+
+  });
+
+  app.get('/challenge', function(req, res){
+    var query = url.parse(req.url, true).query;
+    if(query['id'] === undefined) 
+      res.status(404).render('errors/404', {title: 'Challenge not found'});
+
+
+    Challenges.getChallenge(query['id'], function(err, challenge){
+      if(err) res.status(404).render('errors/404', {title: 'Error'});
+      Hints.getHintsForChallenge(query['id'], function(err, hints){
+        res.render('challenges/challenge', {title: 'Challenge ' + query['id'], challenge: challenge, hints: hints});
+      });
+    });
+
+  });
+
+  app.get('/admin/challenge', function(req, res){
+    if(req.isAuthenticated() && req.user.username === 'admin'){
+      res.render('admin/challenge', {title: 'New Challenge Form' });
+    }else{
+      res.status(404).render('errors/404', {title:'Not logged in as admin'});
+    }
+
+  });
+  
+  app.get('/admin/hint', function(req, res){
+    if(req.isAuthenticated() && req.user.username === 'admin'){
+      res.render('admin/hint', {title: 'New Hint Form' });
+    }else{
+      res.status(404).render('errors/404', {title:'Not logged in as admin'});
+    }
+
+  });
+
+  app.post('/admin/nch', function(req,res){
+    if(req.isAuthenticated() && req.user.username === 'admin'){
+      Challenges.newChallenge(req.body.cid, req.body.answer, req.body.ciphertext, function(err, challenge){
+        res.redirect('/challenge?id='+req.body.cid);
+      });
+    }else{
+      res.status(404).render('errors/404', {title:'Not logged in as admin'});
+    }
+
+  });
+  
+  app.post('/admin/nh', function(req,res){
+    if(req.isAuthenticated() && req.user.username === 'admin'){
+      Hints.newHint(req.body.cid, req.body.seq_num, req.body.delay, req.body.content, function(err, hint){
+        res.redirect('/challenge?id='+req.body.cid);
+      });
+    }else{
+      res.status(404).render('errors/404', {title:'Not logged in as admin'});
     }
 
   });

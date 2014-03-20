@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  h1= title 
+  p Admin page. New challenge form:
+  h2 NEW CHALLENGE
+  form(name="nch", action="/admin/nch", method="post")
+    | id:
+    input(type="text", name="cid")
+    </br>
+
+    | answer:
+    input(type="text", name="answer")
+    </br>
+    | ciphertext:
+    textarea(rows="20", cols="50",  name="ciphertext")
+    </br>
+    input(type="submit", value="Login")
+
+
+

@@ -58,3 +58,10 @@ ul.menu a {
   border-width: 2px;
   border-color: #f00;
 }
+pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: break-word;
+}

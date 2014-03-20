@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title=title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    include ../includes/nav
+    #content
+      div.intro
+        block intro
+      div.ciphertext
+        block ciphertext
+      div.hints
+        block hints
+      div.solution
+        form(name='submit', action='/submit', method='post')
+          p Submit challenge keyword:
+          |Keyword: 
+          input(type='text', name='keyword')
+          input(type='hidden', name='cid', value=challenge.cid)
+          input(type='submit', value='submit')
