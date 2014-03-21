@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 
 exports.localUserSchema = new mongoose.Schema({
-    username: String,
+    username: {type: String, unique: true},
     salt: String,
     hash: String
   });
