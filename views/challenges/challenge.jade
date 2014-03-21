@@ -7,6 +7,12 @@ block ciphertext
  pre=challenge.ciphertext
 
 block hints
-  for val in hints
-    div(id=val.seq_num class=hint)
-      p!=val.content
+  if (hintcount === -1)
+    p Log in to view hints!
+  else
+    for val, index in hints
+      if(index < hintcount)
+        div(id=val.seq_num class=hint)
+          p!=val.content
+      else
+        p Another hint is available! Click here to unlock it!

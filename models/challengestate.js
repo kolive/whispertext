@@ -32,6 +32,14 @@ exports.updateChallengeStateHints = function(username, cid, hintcount, done){
   });
 };
 
+exports.getHintcount = function(username, cid, done){
+  ChallengeState.findOne({username: username, cid: cid}, function(err, cs){
+    if(err) done(err);
+    else done(null, cs);
+  }
+
+}
+
 exports.newChallengeState = function(cid, username, done){
   ChallengeState.create({
     cid : cid,

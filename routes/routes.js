@@ -78,9 +78,15 @@ exports.route = function(app, passport, auth){
 
 
     Challenges.getChallenge(query['id'], function(err, challenge){
-      if(err) res.status(404).render('errors/404', {title: 'Error'});
+      if(err || challenge === null) res.status(404).render('errors/404', {title: 'Error'});
       Hints.getHintsForChallenge(query['id'], function(err, hints){
-        res.render('challenges/challenge', {title: 'Challenge ' + query['id'], challenge: challenge, hints: hints});
+        //TODO: get hintcount and pass to renderer, hintcount=-1 if not logged in
+        var hintcount = -1;
+        if(req.isAuthenticated()){
+          hintcount = 1;
+        }
+        //hitcountget should create an empty challengestate if one isn't created
+        res.render('challenges/challenge', {title: 'Challenge ' + query['id'], challenge: challenge, hints: hints, hintcount : hintcount});
       });
     });
 
